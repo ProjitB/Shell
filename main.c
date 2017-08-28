@@ -16,11 +16,36 @@ ex. if input was: cd     Documents
 2) call function cd (that we must create ourselves) 
 This can be achieved via some sort of switch case or simple if elseif statements.
 */
-void processInput(char *inputString) // This function should parse input string
+void function_caller(char *requestString, int length)
 {
-  int i = 0;
-  while(inputString[i] != '\n')
-    printf("%c", inputString[i++]);
+  int i=0;
+  for(i = 0; i<length; printf("%c", requestString[i++]));
+  if (requestString[0] == 'c' && requestString[1] == 'd')
+    printf("You called a cd function!!!\n");
+}
+
+
+void processInput(char *inputString, int length) // This function should parse input string
+{
+  int i = 0, k=0;
+  char processedString[1025];
+  for(i = 0; i <= length; i++)
+    {
+      if(inputString[i] == ' ' && inputString[i + 1] == ' ');
+      else if(inputString[i] == ' ' && inputString[i+1] != ' ')
+        {processedString[k] = inputString[i]; k++;}
+      else if(inputString[i] != ' ')
+        {processedString[k] = inputString[i]; k++;}
+    }
+  if (processedString[k - 2] == ' ') {processedString[k - 2] = '\n'; k--;}
+  i = 0;
+  if(processedString[0] == ' ')
+    {
+      k--;
+      while(processedString[i] != '\n')
+          processedString[i] = processedString[i + 1], i++;
+    }
+  function_caller(processedString, k);
   return;
 }
 
@@ -74,10 +99,10 @@ int main()
     for(i = 0;; i++)
       {
         scanf("%c", &temp);
-        if (temp=='\n') {inputString[i] = '\n'; break;}
-        else inputString[i] = temp;
+        inputString[i] = temp;
+        if (temp=='\n') break;
       }
-    processInput(inputString);
+    processInput(inputString, i);
   }
   
   return 0;
