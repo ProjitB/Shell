@@ -1,8 +1,9 @@
-#include<stdio.h>
-#include<unistd.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include<string.h>
+#include <string.h>
+#include "cd.c"
 
 char iwd[1024]; //initial working directory
 char systemName[65];
@@ -20,8 +21,13 @@ void function_caller(char *requestString, int length)
 {
   int i=0;
   for(i = 0; i<length; printf("%c", requestString[i++]));
+  printf("\n");
   if (requestString[0] == 'c' && requestString[1] == 'd')
-    printf("You called a cd function!!!\n");
+  {  //printf("You called a cd function!!!\n");
+    int r = cd (requestString);
+    //chdir("/home/alok/Shell/test1");
+
+  }
 }
 
 
@@ -45,6 +51,7 @@ void processInput(char *inputString, int length) // This function should parse i
       while(processedString[i] != '\n')
           processedString[i] = processedString[i + 1], i++;
     }
+  processedString[k-1] = '\0';
   function_caller(processedString, k);
   return;
 }
