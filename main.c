@@ -24,11 +24,12 @@ void function_caller(char *requestString, int length)
   strcpy(iwd2, iwd);
   printf("%s\n", requestString);
   if (requestString[0] == 'c' && requestString[1] == 'd')
-  {  //printf("You called a cd function!!!\n");
-    cd (requestString, length, iwd2);
-    //chdir("/home/alok/Shell/test1");
-    ;
-  }
+      cd(requestString, length, iwd2);
+    else //system commands
+    {
+      //    other_commands(requestString, length);
+      ;
+    }
 }
 
 

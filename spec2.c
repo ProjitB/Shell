@@ -62,7 +62,12 @@ void cd(char *inputString, int length, char* iwd)
   int pathlen = strlen(path), flag, bufi;
   if (path[pathlen -1] != '/') path[pathlen] = '/', path[pathlen + 1] = '\0', pathlen++;
   if(path[0] != '/' && path[0] != '~')
-    flag = changing(path, pwd, pathlen, 0);
+    {
+      if (path[0] == '.' && path[1] == '/')
+        flag = changing(path, pwd, pathlen, 1);
+      else
+        flag = changing(path, pwd, pathlen, 0);
+    }
   else if(path[0] == '~')
     flag = changing(path, iwd, pathlen, 1);
   else if(path[0] == '/')
