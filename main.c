@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <string.h>
-#include "cd.c"
+#include "spec2.c"
 
 char iwd[1024]; //initial working directory
 char systemName[65];
@@ -20,13 +20,14 @@ This can be achieved via some sort of switch case or simple if elseif statements
 void function_caller(char *requestString, int length)
 {
   int i=0;
-  for(i = 0; i<length; printf("%c", requestString[i++]));
-  printf("\n");
+  char iwd2[1025];
+  strcpy(iwd2, iwd);
+  printf("%s\n", requestString);
   if (requestString[0] == 'c' && requestString[1] == 'd')
   {  //printf("You called a cd function!!!\n");
-    int r = cd (requestString);
+    cd (requestString, length, iwd2);
     //chdir("/home/alok/Shell/test1");
-
+    ;
   }
 }
 
@@ -52,7 +53,7 @@ void processInput(char *inputString, int length) // This function should parse i
           processedString[i] = processedString[i + 1], i++;
     }
   processedString[k-1] = '\0';
-  function_caller(processedString, k);
+  function_caller(processedString, strlen(processedString));
   return;
 }
 
@@ -98,7 +99,7 @@ int main()
    char path[] = "/home/projit-normal/Documents"; //Change path as required for testing
    chdir(path); 
    print_Prompt(); */
-
+  chdir(iwd);
   while(1){
     print_Prompt();
     int i = 0;
