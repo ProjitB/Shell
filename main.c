@@ -4,6 +4,7 @@
 #include <pwd.h>
 #include <string.h>
 #include "spec2.c"
+#include "ls.c"
 
 char iwd[1024]; //initial working directory
 char systemName[65];
@@ -17,19 +18,27 @@ ex. if input was: cd     Documents
 2) call function cd (that we must create ourselves) 
 This can be achieved via some sort of switch case or simple if elseif statements.
 */
+
 void function_caller(char *requestString, int length)
 {
   int i=0;
   char iwd2[1025];
   strcpy(iwd2, iwd);
   printf("%s\n", requestString);
-  if (requestString[0] == 'c' && requestString[1] == 'd')
+
+  if (!strcmp("clear", requestString))
+      printf("\033c");
+  else if(requestString[0] == 'c' && requestString[1] == 'd')
       cd(requestString, length, iwd2);
-    else //system commands
-    {
+  else if (requestString[0] == 'l' && requestString[1] == 's')
+      ls(requestString, length);
+  else if (!strcmp("pwd", requestString))
+      pwd();
+  else
+  {
       //    other_commands(requestString, length);
       ;
-    }
+  }
 }
 
 
