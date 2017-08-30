@@ -5,6 +5,7 @@
 #include <string.h>
 #include "spec2.c"
 #include "ls.c"
+#include "spec4.c"
 
 char iwd[1024]; //initial working directory
 char systemName[65];
@@ -39,7 +40,7 @@ void function_caller(char *requestString, int length, char *originalString, int 
   else
   {
       //    other_commands(requestString, length);
-      ;
+    other_programs(requestString, length);
   }
 }
 
