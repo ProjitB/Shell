@@ -4,7 +4,7 @@
 #include <pwd.h>
 #include <string.h>
 #include "spec2.c"
-#include "ls.c"
+#include "spec3.c"
 
 char iwd[1024]; //initial working directory
 char systemName[65];
