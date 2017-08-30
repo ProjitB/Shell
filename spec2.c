@@ -87,3 +87,15 @@ void pwd ()
     getcwd(pwd, sizeof(pwd));
     printf("%s\n", pwd);
 }
+
+void echo (char* inputString, int length)
+{
+    int i;
+    char var[1025];
+    for (i = 5; i <= length; i++)
+        var[i - 5] = inputString[i];
+    if (var[0] != '$')
+        printf("%s\n", var);
+    else
+        ;
+}

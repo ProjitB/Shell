@@ -127,26 +127,27 @@ void lsl(char*argv, int length)
         {
             sprintf(buf, "%s/%s", path, myfile->d_name);
             stat(buf, &mystat);
-
-            //File Permissions
-            printf( (S_ISDIR(mystat.st_mode)) ? "d" : "-");
-            printf( (mystat.st_mode & S_IRUSR) ? "r" : "-");
-            printf( (mystat.st_mode & S_IWUSR) ? "w" : "-");
-            printf( (mystat.st_mode & S_IXUSR) ? "x" : "-");
-            printf( (mystat.st_mode & S_IRGRP) ? "r" : "-");
-            printf( (mystat.st_mode & S_IWGRP) ? "w" : "-");
-            printf( (mystat.st_mode & S_IXGRP) ? "x" : "-");
-            printf( (mystat.st_mode & S_IROTH) ? "r" : "-");
-            printf( (mystat.st_mode & S_IWOTH) ? "w" : "-");
-            printf( (mystat.st_mode & S_IXOTH) ? "x" : "-");
-            printf("\t\t%zu",mystat.st_size);
-
             if (myfile->d_name[0]!='.')
-            //printf("\t\t%s", grp->grp_name);
+            {
+            //File Permissions
+                printf( (S_ISDIR(mystat.st_mode)) ? "d" : "-");
+                printf( (mystat.st_mode & S_IRUSR) ? "r" : "-");
+                printf( (mystat.st_mode & S_IWUSR) ? "w" : "-");
+                printf( (mystat.st_mode & S_IXUSR) ? "x" : "-");
+                printf( (mystat.st_mode & S_IRGRP) ? "r" : "-");
+                printf( (mystat.st_mode & S_IWGRP) ? "w" : "-");
+                printf( (mystat.st_mode & S_IXGRP) ? "x" : "-");
+                printf( (mystat.st_mode & S_IROTH) ? "r" : "-");
+                printf( (mystat.st_mode & S_IWOTH) ? "w" : "-");
+                printf( (mystat.st_mode & S_IXOTH) ? "x" : "-");
+                printf("\t\t%zu",mystat.st_size);
+
+                        //printf("\t\t%s", grp->grp_name);
             //printf("\t\t%s", pwd->pw_name);
                 printf("\t\t%s\t", myfile->d_name);
-            printf("\n");
-            cnt++;
+                printf("\n");
+                cnt++;
+            }
         }
         printf("total %d", cnt);
     }

@@ -24,7 +24,7 @@ void function_caller(char *requestString, int length)
   int i=0;
   char iwd2[1025];
   strcpy(iwd2, iwd);
-  printf("%s\n", requestString);
+  //printf("%s\n", requestString);
 
   if (!strcmp("clear", requestString))
       printf("\033c");
@@ -34,6 +34,8 @@ void function_caller(char *requestString, int length)
       ls(requestString, length);
   else if (!strcmp("pwd", requestString))
       pwd();
+  else if (requestString[0] == 'e' && requestString[1] == 'c'&& requestString[2] == 'h' && requestString[3] == 'o')
+      echo(requestString, length);
   else
   {
       //    other_commands(requestString, length);
