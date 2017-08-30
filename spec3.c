@@ -79,7 +79,7 @@ void noflagls (char* argv, int length)
             stat(buf, &mystat);
             //printf("%zu",mystat.st_size);
             if (myfile->d_name[0]!='.')
-                printf("%s\t", myfile->d_name);
+                printf("%s\t\t", myfile->d_name);
         }
     printf("\n");
     closedir(mydir);
@@ -99,7 +99,7 @@ void lsa (char* argv, int length)
             stat(buf, &mystat);
             //printf("%zu",mystat.st_size);
             //if (myfile->d_name[0]!='.')
-            printf("%s\t", myfile->d_name);
+            printf("%s\t\t", myfile->d_name);
         }
     printf("\n");
     closedir(mydir);

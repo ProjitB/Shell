@@ -1,9 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <string.h>
 
+//void echo1 (int argc, char* argv);
+extern char** environ;
 
 int remove_last(char *inputString, int length)
 {
@@ -90,12 +93,18 @@ void pwd ()
 
 void echo (char* inputString, int length, char *originalString, int lengthOriginal)
 {
-    int i;
-    char var[1025];
+    int i, k;
+    char var[1025], var2[1025];
     for (i = 5; i <= length; i++)
         var[i - 5] = inputString[i];
-    if (var[0] == '$') // Alok handle this part with environment variables and all
-        printf("%s\n", var);
+    if (var[0] == '$')
+    {
+        //int k, char var2[1025];
+        for (k = 0; k < strlen(var); k++)   
+            var2[k] = var[k+1];
+        //echo1(1, var2);
+        ;
+    }
     else if(var[0] == '"')//echo " something " taken care of here(unformatted inside "")
       {
         int flag = 0, k = 0;
