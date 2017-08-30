@@ -18,7 +18,7 @@ int add_section(char *inputString, char*section, int lengthInput, int lengthSect
 {
   int i, j;
   inputString[lengthInput] = '/';
-  for(i = lengthInput + 1, j = 0; j < lengthSection; i++, j++)
+  for(i = lengthInput + 1, j = 0; j < lengthSection; i++, j++) 
       inputString[i] = section[j];
   inputString[i] = '\0';
   return i;
@@ -57,6 +57,11 @@ void cd(char *inputString, int length, char* iwd)
   getcwd(pwdSaved, sizeof(pwdSaved));
   getcwd(pwd, sizeof(pwd));
   int i;
+  if (length == 2)
+  {
+    inputString[2] = ' ', inputString[3] = '~', inputString[4] = '\0';
+    length = 4;
+  }
   for(i = 3; i <= length; i++)
       path[i - 3] = inputString[i];
   int pathlen = strlen(path), flag, bufi;
@@ -72,7 +77,39 @@ void cd(char *inputString, int length, char* iwd)
     flag = changing(path, iwd, pathlen, 1);
   else if(path[0] == '/')
     flag = chdir(path);
-  if (flag == -1) printf("Couldn't change directory!!\n"), chdir(pwdSaved);
+  if (flag == -1) printf("shell: cd %s: No such file or directory\n", path), chdir(pwdSaved);
  return;
 }
 
+void pwd ()
+{
+    char pwd[1025];
+    getcwd(pwd, sizeof(pwd));
+    printf("%s\n", pwd);
+}
+
+void echo (char* inputString, int length, char *originalString, int lengthOriginal)
+{
+    int i;
+    char var[1025];
+    for (i = 5; i <= length; i++)
+        var[i - 5] = inputString[i];
+    if (var[0] == '$') // Alok handle this part with environment variables and all
+        printf("%s\n", var);
+    else if(var[0] == '"')//echo " something " taken care of here(unformatted inside "")
+      {
+        int flag = 0, k = 0;
+        char buffer[1025];
+        for (i = 0; i < lengthOriginal; i++)
+          if (originalString[i] == '"')
+            break;
+        for (i++; i < lengthOriginal; i++, k++) {
+          if (originalString[i] == '"') break;
+          else buffer[k] = originalString[i];
+        }
+        buffer[k] = '\0';
+        printf("%s\n", buffer);
+      }
+    else
+        ;
+}
