@@ -32,8 +32,9 @@ void function_caller(char *requestString, int length, char *originalString, int 
   if(requestString[length - 1] == '&')
     {
       pid = fork();
-      requestString[length - 2] = '\0';
-      length -= 2;
+      if (requestString[length -2] == ' ')
+        requestString[length - 2] = '\0', length -= 2;
+      else requestString[length - 1] = '\0', length -= 1;
     }
   else{
     flag = 1;
