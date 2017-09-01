@@ -149,7 +149,7 @@ void lsl(char*argv, int length)
                 cnt++;
             }
         }
-        printf("total %d", cnt);
+        printf("total %d\n", cnt);
     }
     closedir(mydir);
 }
@@ -197,7 +197,7 @@ void bothflagsls(char* argv, int length)
             printf("\n");
             cnt++;
         }
-        printf("total %d", cnt);
+        printf("total %d\n", cnt);
     }
     closedir(mydir);
 
