@@ -1,0 +1,21 @@
+# SHELL in C:
+    This set of programs creates an interactive shell for a Linux system in C. The shell can achieve the following:
+    - main.c : The main program that prints the prompt and calls the other functions. It takes care of forking and '&' case as well
+    - spec2.c : The second specification, "cd" command, It has checks for the path type.
+    - spec3.c : The third specification, "ls" command. It executes flags as well
+    - spec4.c : The fourth specification runs all other system commands using execvp
+    - spec5.c : The fifth specification runs "pinfo" 
+
+# GETTING started:
+    This shell is accompained by a makefile that compiles the code for you. Just run the command "make:.
+    
+    ## Prerequisites:
+        The system should be a Linux system, and have gcc
+    ## Installation:
+        No innstallation required
+
+# EXECUTING the shell:
+    - Run "make"
+    - Run "./a.out"
+    - The directory from which the program is run will be the home directory, or "~"
+    - Only one of the programs is to be compiled, which is done by "make". DO NOT COMPILE OTHER PROGRAMS.
