@@ -1,129 +1,158 @@
 #include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include "spec4.c"
+#include <string.h>
 #include <fcntl.h>
 
-int input_redir (char* argv, int length, char** res, char* input);
-int output_redir (char* argv, int length, char** res, char* input);
-//int input_output_redir (char* argv, int length, char** res);
 int find_redir (char* argv, int length);
-
-int input_redir (char* argv, int length, char** res, char* input)
-{
-    char* temp = strtok (argv, " ");
-    int n = 0, i;
-    //char** res = NULL;
-    while (temp)
-    {
-        res = realloc (res, sizeof(char*) * (++n));
-        if (res == NULL)
-            exit(-1);
-        res[n - 1] = temp;
-        temp = strtok(NULL, " ");
-    }
-    res = realloc (res, sizeof(char*) * (n+1));
-    res[n] = 0;
-    int fd = open(input, O_RDONLY, 0);
-    dup2(fd, STDIN_FILENO);
-    close(fd);
-    int status = execvp(res[0], res);
-    if (!status)
-        printf("The command could not be executed\n");
-    return n;
-}
-
-int output_redir (char* argv, int length, char** res, char* output)
-{
-    char* temp = strtok (argv, " ");
-    int n = 0, i;
-    while (temp)
-    {
-        res = realloc(res, sizeof(char*) * (++n));
-        if (res == NULL)
-            exit(-1);
-        res[n - 1] = temp;
-        temp = strtok(NULL, " ");
-    }
-    res = realloc (res, sizeof(char*) * (n+1));
-    res[n] = 0;
-    int fd = creat(output, 0644);
-    dup2(fd, STDOUT_FILENO);
-    close (fd);
-    //printf ("%s", output);
-    int status  = execvp(res[0], res);
-    if (!status)
-        printf("The command could not be executed\n");
-    return n;
-}
+int input_redir (char* argv, int length);
+int output_redir (char* argv, int length);
+int input_output_redir (char* argv, int length);
 
 int find_redir (char* argv, int length)
 {
-    int i = 0, flag = 0, j = 0, temp, n;
-    printf ("%s\n", argv);
-    char infile[50] = "", outfile[50] = "";
-    char** res = NULL;
-    //if flag == 0 -> nothing
-    //if flag == 1 -> input_redir
-    //if flag == 2 -> output _redir
-    //if flag == 3 -> input_output_redir 
-    while (i < length)
+    int flag = 0, i, n;
+    //char** result = NULL;
+    for (i = 0; i < length; i++)
     {
-        if (argv[i] == '<') //input redirection
-        {
-            if (flag == 0)
-                flag = 1;
-            else
-                flag = 3;
-            temp = i; //storing the value of i to continue the loop
-            while (argv[i] != '>' || argv[i] != '\0' || argv[i] !='\n')
-            {
-                infile[j] = argv[temp];
-                j++, temp++;
-            }
-            //now infile has the input filename, we hope
-            i = temp;
-        }
-        if (argv[i] == '>')//output redirection
-        {
-            if (flag == 0)
-                flag = 2;
-            else
-                flag = 3;
-            temp = i+1;
-            //printf("%d%c", temp, argv[temp]);
-            //while (argv[temp] != '<' || argv[temp] != '\0' || argv[temp] != '\n' || temp < length)
-            while (temp<length)
-            {
-                outfile[j] = argv[temp];
-                j++, temp++;
-            }
-            
-            printf("Outfile: %s", outfile);
-            i = temp;
-        }
+        if (argv[i] == '<' && flag == 0)
+            flag = 1;
+        if (argv[i] == '>' && flag == 0)
+            flag = 2;
+        if ((argv[i] == '<' || argv[i] == '>') && flag > 0)
+            flag = 3;
+    }
+    if (!flag)
+        return 0;
+    else if (flag == 1)
+        n = input_redir (argv, length);
+    else if (flag == 2)
+        n = output_redir (argv, length);
+    else
+        n = input_output_redir (argv, length);
+
+    return n;
+}
+
+int output_redir (char* arg, int length)
+{
+    int i = 0, j = 0;
+    char output[500] = "", cmd[500] = "";
+    //printf ("%s\n", arg);
+    //printf("%c\n", arg[5]);
+    while (arg[i] != 62)
+    {
+        cmd[i] = arg[i];
         i++;
     }
-    if (flag == 0)
-        return -1;
-    else if (flag == 1)
-        n = input_redir(argv, length, res, infile);
-    else if (flag == 2)
-        n = output_redir(argv, length, res, outfile);
-    //else
-        //n = input_output_redir(argv, length, res, infile, outfile);
-    return n;
+    cmd [i-1] = '\0';
+    printf("%s", cmd);
+    //i has the character ">" in it. Now, it needs i+2
+    i = i + 2;
+    while (i < length)
+    {
+        output[j] = arg[i];
+        i++, j++;
+    }
+    //printf ("%s\n", output);
+    int fd = open (output, O_CREAT, O_WRONLY);
+    dup2 (fd, STDOUT_FILENO);
+    //close(fd);
+    char** result = NULL;
+    
+    convert_Token (cmd, result);
+    close (fd);
+    return 2;
+}
+
+
+int input_redir (char* arg, int length)
+{
+    int i = 0, j = 0;
+    char input[500] = "";
+    //printf ("%s\n", arg);
+    while (arg[i] != 60) i++;
+    //printf("%s\n", cmd);
+    i = i + 2;
+    while (i < length)
+    {
+        input[j] = arg[i];
+        i++, j++;
+    }
+    //strcat(strcat(cmd, " "), input);
+    //printf ("%s\n", input);
+    //printf("%s\n", cmd);
+    int fd = open (input, O_RDONLY);
+    dup2 (fd, STDIN_FILENO);
+    close(fd);
+    char** result = NULL;
+    convert_Token(arg, result);
+    //close(fd);
+    return 1;
+}
+
+int input_output_redir (char* arg, int length)
+{
+    int i = 0, j = 0, f1 = 0, f2 = 0;
+    //arg is of form command > op < ip
+    //or command < ip > op
+    char cmd[500] = "", input[500] = "", output[500] = "";
+    while (arg[i] != 60 && arg[i] != 62)
+    {
+        cmd[i] = arg[i];
+        i++;
+    }
+    //i  = i + 2;
+    if (arg[i] == 60)
+    {
+        i = i + 2;
+        while (arg[i] != 62)
+        {
+            input[j] = arg[i];
+            i++, j++;
+        }
+        j = 0;
+        i = i + 2;
+        while (i < length)
+        {
+            output[j] = arg[i];
+            i++, j++;
+        }
+    }
+    else if (arg[i] == 62)
+    {
+        while (arg[i] != 60)
+        {
+            output[j] = arg[i];
+            i++, j++;
+        }
+        j = 0;
+        i = i + 2;
+        while (i < length)
+        {
+            input[j] = arg[i];
+            i++, j++;
+        }
+    }
+    //printf("%s\n%s\n%s\n", cmd, input, output);
+    strcat(strcat(cmd, " "), input);
+    int fd1 = open (input, O_RDONLY, 0);
+    dup2(fd1, STDIN_FILENO);
+    close(fd1);
+    int fd2 = creat (output, 0644);
+    dup2(fd2, STDOUT_FILENO);
+    char** result = NULL;
+    convert_Token(cmd, result);
+    close (fd2);
 }
 
 int main()
 {
-    char input[1000];
-    printf("<NAME@UBUNTU ~>");
-    scanf("%s", input);
-    ///printf("%s\n", input);
-    int len = strlen(input);
-    find_redir(input, len);
+    
+    char inputString[] = "more < /etc/passwd > pwd.txt";
+    find_redir (inputString, strlen(inputString));
     return 0;
 }
