@@ -9,6 +9,13 @@
 #include "spec3.c"
 #include "spec5.c"
 #include <sys/wait.h>
+#include <signal.h>
+
+int killProcess = 0;
+void signal_callback_handler(int signum)
+{
+  killProcess = 1;
+}
 
 char iwd[1024]; //initial working directory
 char systemName[65];
@@ -134,6 +141,8 @@ int main()
      char path[] = "/home/projit-normal/Documents"; //Change path as required for testing
      chdir(path); 
      print_Prompt(); */
+  signal(SIGINT, signal_callback_handler);
+  
   chdir(iwd);
   while(1){
     print_Prompt();
