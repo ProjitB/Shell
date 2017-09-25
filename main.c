@@ -12,6 +12,9 @@
 #include <signal.h>
 #include "spec2_5.c"
 int killProcess = 0;
+int mainProcessId;
+int numChildren = 0;
+int backgroundChildren[1000];
 void signal_callback_handler(int signum)
 {
   killProcess = 1;
@@ -32,13 +35,23 @@ struct passwd *user;
 
 void function_caller(char *requestString, int length, char *originalString, int lengthOriginal)
 {
-  int i=0, pid, flag = 0;
+  int i=0, pid, flag = 0, flag2 = 1;
   char iwd2[1025];
   strcpy(iwd2, iwd);
   //printf("%s\n", requestString);
+  if (strcmp(requestString, "quit") == 0) {kill(0, SIGINT); kill(0,SIGKILL);};
+  if (strcmp(requestString, "overkill") == 0) {
+    for(i = 0; i < numChildren; i++)
+      kill(backgroundChildren[i], SIGKILL);
+    numChildren = 0;
+    flag2 = 0;
+  }
+  
   if(requestString[length - 1] == '&')
     {
       pid = fork();
+      backgroundChildren[numChildren] = pid;
+      numChildren++;
       if (requestString[length -2] == ' ')
         requestString[length - 2] = '\0', length -= 2;
       else requestString[length - 1] = '\0', length -= 1;
@@ -58,15 +71,13 @@ void function_caller(char *requestString, int length, char *originalString, int 
       pwd();
     else if (requestString[0] == 'e' && requestString[1] == 'c'&& requestString[2] == 'h' && requestString[3] == 'o')
       echo(requestString, length, originalString, lengthOriginal);
-        
     else if (requestString[0] == 'p' && requestString[1] == 'i'&& requestString[2] == 'n' && requestString[3] == 'f' && requestString[4] == 'o')
         findPid(requestString, length);
-    else if (requestString[0] == 's' && requestString[1] == 'e' && requestString[2] == 't' && requestString[3] == 'e' && requestString[4] == 'n' && requestString[5] == 'v')
-      setenviron(requestString, length);
-    else if (requestString[0] = 'u' && requestString[1] == 'n' && requestString[2] == 's' && requestString[3] == 'e' && requestString[4] == 't' && requestString[5] == 'e' && requestString[6] == 'n' && requestString[7] == 'v') unsetenviron(requestString, length);
+    else if (requestString[0] == 's' && requestString[1] == 'e' && requestString[2] == 't' && requestString[3] == 'e' && requestString[4] == 'n' && requestString[5] == 'v') setenviron(requestString, length);
+    else if (requestString[0] == 'u' && requestString[1] == 'n' && requestString[2] == 's' && requestString[3] == 'e' && requestString[4] == 't' && requestString[5] == 'e' && requestString[6] == 'n' && requestString[7] == 'v') unsetenviron(requestString, length);
     else
       {
-        other_programs(requestString, length);
+        if (flag2) other_programs(requestString, length);
       }
   }
   else
@@ -145,8 +156,13 @@ int main()
      char path[] = "/home/projit-normal/Documents"; //Change path as required for testing
      chdir(path); 
      print_Prompt(); */
+  int x = setpgid(0,0);
+  if (x == -1) {
+    perror("setpgid");
+    exit(1);
+  }
   signal(SIGINT, signal_callback_handler);
-  
+  mainProcessId = getpid();
   chdir(iwd);
   while(1){
     print_Prompt();
