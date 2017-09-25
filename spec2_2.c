@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "spec4.c"
+//#include "spec4.c"
 #include <string.h>
 #include <fcntl.h>
 
@@ -20,9 +20,9 @@ int find_redir (char* argv, int length)
     {
         if (argv[i] == '<' && flag == 0)
             flag = 1;
-        if (argv[i] == '>' && flag == 0)
+        else if (argv[i] == '>' && flag == 0)
             flag = 2;
-        if ((argv[i] == '<' || argv[i] == '>') && flag > 0)
+        else if ((argv[i] == '<' || argv[i] == '>') && flag > 0)
             flag = 3;
     }
     if (!flag)
@@ -49,7 +49,7 @@ int output_redir (char* arg, int length)
         i++;
     }
     cmd [i-1] = '\0';
-    printf("%s", cmd);
+    //printf("%s", cmd);
     //i has the character ">" in it. Now, it needs i+2
     i = i + 2;
     while (i < length)
@@ -57,12 +57,10 @@ int output_redir (char* arg, int length)
         output[j] = arg[i];
         i++, j++;
     }
-    //printf ("%s\n", output);
-    int fd = open (output, O_CREAT, O_WRONLY);
+    //printf("%s %s\n", cmd, output);
+    int fd = creat (output, 0644);
     dup2 (fd, STDOUT_FILENO);
-    //close(fd);
     char** result = NULL;
-    
     convert_Token (cmd, result);
     close (fd);
     return 2;
@@ -82,10 +80,9 @@ int input_redir (char* arg, int length)
         input[j] = arg[i];
         i++, j++;
     }
-    //strcat(strcat(cmd, " "), input);
     //printf ("%s\n", input);
-    //printf("%s\n", cmd);
-    int fd = open (input, O_RDONLY);
+    //printf("%s\n", arg);
+    int fd = open (input, O_RDONLY, 0);
     dup2 (fd, STDIN_FILENO);
     close(fd);
     char** result = NULL;
@@ -149,10 +146,10 @@ int input_output_redir (char* arg, int length)
     close (fd2);
 }
 
-int main()
+/*int main()
 {
     
-    char inputString[] = "more < /etc/passwd > pwd.txt";
+    char inputString[] = "cat main.c > lol.txt";
     find_redir (inputString, strlen(inputString));
     return 0;
-}
+}*/

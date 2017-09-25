@@ -1,0 +1,15 @@
+a.out
+ls.txt
+main.c
+makefile
+README
+spec2_2.c
+spec2_3.c
+spec2_5.c
+spec2.c
+spec3.c
+spec4.c
+spec5.c
+test
+test1
+todo.txt

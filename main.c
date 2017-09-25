@@ -11,6 +11,9 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include "spec2_5.c"
+#include "spec2_2.c"
+#include "spec2_3.c"
+
 int killProcess = 0;
 int mainProcessId;
 int numChildren = 0;
@@ -60,9 +63,14 @@ void function_caller(char *requestString, int length, char *originalString, int 
     flag = 1;
     pid = fork();
   }
+  int redir = 0;
+  for(i=0; i < length; i++)
+    if (requestString[i] == '>' || requestString[i] == '<') redir = 1, flag2 = 0;
+  
   if(pid == 0){
     if (!strcmp("clear", requestString))
       printf("\033c");
+    else if (redir) find_redir(requestString, length);
     else if(requestString[0] == 'c' && requestString[1] == 'd')
       cd(requestString, length, iwd2);
     else if (requestString[0] == 'l' && requestString[1] == 's')

@@ -48,9 +48,9 @@ int piping (char** argv, int argc)
     return status;
 }
 
-int main ()
-{
-    char input[] = "ls -al | wc";
-    commands (input, strlen(input));
-    return 0;
-}
+/* int main () */
+/* { */
+/*     char input[] = "ls -al | wc"; */
+/*     commands (input, strlen(input)); */
+/*     return 0; */
+/* } */
