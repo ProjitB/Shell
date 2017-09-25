@@ -4,7 +4,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <string.h>
-
 //void echo1 (int argc, char* argv);
 extern char** environ;
 
@@ -91,7 +90,7 @@ void pwd ()
     printf("%s\n", pwd);
 }
 
-void echo (char* inputString, int length, char *originalString, int lengthOriginal)
+int echo (char* inputString, int length, char *originalString, int lengthOriginal)
 {
     int i, k;
     char var[1025], var2[1025];
@@ -102,6 +101,7 @@ void echo (char* inputString, int length, char *originalString, int lengthOrigin
         //int k, char var2[1025];
         for (k = 0; k < strlen(var); k++)   
             var2[k] = var[k+1];
+        printf("%s\n", getenv(var2));
         //echo1(1, var2);
         ;
     }
@@ -121,4 +121,5 @@ void echo (char* inputString, int length, char *originalString, int lengthOrigin
       }
     else
         ;
+    return 2;
 }

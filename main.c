@@ -10,7 +10,7 @@
 #include "spec5.c"
 #include <sys/wait.h>
 #include <signal.h>
-
+#include "spec2_5.c"
 int killProcess = 0;
 void signal_callback_handler(int signum)
 {
@@ -58,8 +58,12 @@ void function_caller(char *requestString, int length, char *originalString, int 
       pwd();
     else if (requestString[0] == 'e' && requestString[1] == 'c'&& requestString[2] == 'h' && requestString[3] == 'o')
       echo(requestString, length, originalString, lengthOriginal);
+        
     else if (requestString[0] == 'p' && requestString[1] == 'i'&& requestString[2] == 'n' && requestString[3] == 'f' && requestString[4] == 'o')
         findPid(requestString, length);
+    else if (requestString[0] == 's' && requestString[1] == 'e' && requestString[2] == 't' && requestString[3] == 'e' && requestString[4] == 'n' && requestString[5] == 'v')
+      setenviron(requestString, length);
+    else if (requestString[0] = 'u' && requestString[1] == 'n' && requestString[2] == 's' && requestString[3] == 'e' && requestString[4] == 't' && requestString[5] == 'e' && requestString[6] == 'n' && requestString[7] == 'v') unsetenviron(requestString, length);
     else
       {
         other_programs(requestString, length);
