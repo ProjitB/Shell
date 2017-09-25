@@ -1,2 +1,14 @@
-~ for ls
-testcd
+All custom commands:
+ - setenv var
+ - unsetenv var
+ - jobs
+ - kjob
+ - fg
+ - bg
+ - overkill
+ - quit
+ - CTRL Z
+ - CTRL C
+
+I/O redirection bug-fix
+Piping bug-fix
