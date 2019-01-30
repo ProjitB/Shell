@@ -1,3 +1,4 @@
+This was not very well coded
 # SHELL in C:
     This set of programs creates an interactive shell for a Linux system in C. The shell can achieve the following:
     - main.c : The main program that prints the prompt and calls the other functions. It takes care of forking and '&' case as well
